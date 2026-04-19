@@ -1,0 +1,34 @@
+{
+    "todos": [
+    {
+        "id": 1,
+        "task": "Learn HTML",
+        "completed": true
+    },
+    {
+        "id": 2,
+        "task": "Learn CSS",
+        "completed": true
+    },
+    {
+        "id": 3,
+        "task": "Learn JavaScript",
+        "completed": true
+    },
+    {
+        "id": 4,
+        "task": "Learn React",
+        "completed": false
+    },
+    {
+        "id": 5,
+        "task": "Hike Mount Everest",
+        "completed": true
+    },
+    {
+        "id": 6,
+        "task": "Drink Water",
+        "completed": false
+    }
+    ]
+}
