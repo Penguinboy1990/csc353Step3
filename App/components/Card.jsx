@@ -1,28 +1,27 @@
 import React, {useState} from 'react';
+import PropTypes from 'prop-types' // this is old
 function Card(props) {
-    const [name, setName] = useState("Guest"); // initial value
-    const [age, setAge] = useState(0);
-    const [isEmployed, setIsEmployed] = useState(false);
+    const [task, setTask] = useState("Do Something"); // initial value
+    const [isCompleted, setIsCompleted] = useState(false);
 
-    const updateName = () => {
-        setName("Spongebob"); // uses the function instead of declaring variable directly
+    const updateTask = () => {
+        setTask(task); // uses the function instead of declaring variable directly
     }
-    const incrementAge = () => {
-        setAge(age + 1)
-    }
-    const toggleEmployedStatus = () => {
-        setIsEmployed(!isEmployed);
+    const toggleCompleted = () => {
+        setIsCompleted(!isCompleted);
     }
 
     return( <div>
-        <p>Name: {name}</p>
-        <button onClick={updateName}>Set Name</button>
+        <p>task: {task}</p>
+        <button onClick={updateTask}>Set Task</button>
 
-        <p>Age: {age}</p>
-        <button onClick={incrementAge}>Increment Age</button>
-
-        <p>Is employed: {isEmployed ? "Yes" : "No"}</p>
-        <button onClick={toggleEmployedStatus}>Toggle Employment Status</button>
+        <p>Is employed: {isCompleted}</p>
+        <button onClick={toggleCompleted}>Toggle Completed</button>
     </div>);
+}
+Card.propTypes = {
+    id: PropTypes.number,
+    task: PropTypes.string,
+    isCompleted: PropTypes.bool,
 }
 export default Card
