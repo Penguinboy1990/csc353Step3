@@ -1,9 +1,44 @@
+"use client";
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-function Card({ id, task: initialTask, isCompleted: initialIsCompleted }) {
-    const [task] = useState(initialTask ?? "Do Something");
+const apiURL = '/api/todos';
+function Card({ id, task: initialTask, isCompleted: initialIsCompleted, onDelete }) {
+    const [task, setTask] = useState(initialTask ?? "Do Something");
     const [isCompleted, setIsCompleted] = useState(initialIsCompleted ?? false);
+
+    async function toggleComplete() {
+        const response = await fetch(`${apiURL}/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ completed: !isCompleted }),
+        });
+        if (response.ok) {
+            setIsCompleted(!isCompleted);
+        }
+    }
+
+    async function editTodo() {
+        const newTask = prompt("Edit your todo:");
+        if (!newTask) return;
+        const response = await fetch(`${apiURL}/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task: newTask }),
+        });
+        if (response.ok) {
+            setTask(newTask);
+        }
+    }
+
+    async function deleteTodo() {
+        const response = await fetch(`${apiURL}/${id}`, {
+            method: 'DELETE',
+        });
+        if (response.ok) {
+            onDelete(id);
+        }
+    }
 
     return (
         <div style={{
@@ -25,19 +60,38 @@ function Card({ id, task: initialTask, isCompleted: initialIsCompleted }) {
             }}>
                 {task}
             </p>
-            <button
-                onClick={() => setIsCompleted(!isCompleted)}
-                style={{
-                    background: isCompleted ? '#a8dfc0' : '#3a7ca5',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '8px',
-                    padding: '0.35rem 0.75rem',
-                    cursor: 'pointer',
-                    fontSize: '0.8rem',
-                }}
-            >
+            <button onClick={editTodo} style={{
+                background: '#6a9ab0',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '0.35rem 0.75rem',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+            }}>
+                ✏️ Edit
+            </button>
+            <button onClick={toggleComplete} style={{
+                background: isCompleted ? '#a8dfc0' : '#3a7ca5',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '0.35rem 0.75rem',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+            }}>
                 {isCompleted ? '✅ Done' : 'Mark Done'}
+            </button>
+            <button onClick={deleteTodo} style={{
+                background: '#e07a7a',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '0.35rem 0.75rem',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+            }}>
+                🗑️ Delete
             </button>
         </div>
     );
@@ -47,6 +101,7 @@ Card.propTypes = {
     id: PropTypes.number,
     task: PropTypes.string,
     isCompleted: PropTypes.bool,
+    onDelete: PropTypes.func,
 };
 
 export default Card;
