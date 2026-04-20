@@ -1,0 +1,4 @@
+Remember to run this to start backend on a different port
+when in the root folder /new/todo-app
+
+npx json-server@0.17.4 src/app/backend/db.json --port 3001
