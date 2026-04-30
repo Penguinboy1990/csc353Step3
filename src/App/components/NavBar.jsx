@@ -1,128 +1,308 @@
 "use client";
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
-import { useState } from "react";
-import Link from "next/link";
-import { ShoppingCart, Search, MapPin, ChevronDown } from "lucide-react";
-import { useCart } from "./app/context/CartContext";
-import CartDrawer from "./CartDrawer";
+function NavBar({ cart, todos }) {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [showResults, setShowResults] = useState(false);
 
-export default function Navbar({ onSearch }: { onSearch?: (q: string) => void }) {
-    const { count } = useCart();
-    const [cartOpen, setCartOpen] = useState(false);
-    const [cartBouncing, setCartBouncing] = useState(false);
-    const [query, setQuery] = useState("");
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-    const handleCartOpen = () => {
-        setCartBouncing(true);
-        setTimeout(() => setCartBouncing(false), 350);
-        setCartOpen(true);
-    };
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSearch?.(query);
-    };
+    function handleSearch(e) {
+        const query = e.target.value;
+        setSearchQuery(query);
+        if (query.trim()) {
+            const results = todos.filter(todo =>
+                todo.task.toLowerCase().includes(query.toLowerCase())
+            );
+            setSearchResults(results);
+            setShowResults(true);
+        } else {
+            setSearchResults([]);
+            setShowResults(false);
+        }
+    }
 
     return (
-        <>
-            <header style={{ backgroundColor: "#131921" }} className="sticky top-0 z-50 shadow-lg">
-                <div className="flex items-center gap-2 px-4 py-2 max-w-[1400px] mx-auto">
-                    {/* Logo */}
-                    <Link href="/" className="flex-shrink-0 mr-2">
-                        <div className="flex flex-col items-start leading-none">
-                            <span className="font-display text-white text-3xl tracking-wider">famazon</span>
-                            <span style={{ color: "#f90" }} className="text-[10px] font-medium -mt-1 ml-0.5">.not-com</span>
-                        </div>
-                    </Link>
+        <nav style={{
+            width: '100%',
+            background: '#1a3a4a',
+            padding: '0',
+            fontFamily: 'Georgia, serif',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+            position: 'sticky',
+            top: 0,
+            zIndex: 1000,
+        }}>
+            {/* Main navbar row */}
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0.6rem 1.5rem',
+                gap: '1rem',
+            }}>
 
-                    {/* Deliver to */}
-                    <div className="hidden lg:flex items-end gap-1 text-white hover:text-amber-400 cursor-pointer transition-colors ml-2">
-                        <MapPin size={16} className="mb-0.5" />
-                        <div className="flex flex-col">
-                            <span className="text-xs text-gray-400">Deliver to</span>
-                            <span className="text-sm font-semibold">Nowhere Real</span>
-                        </div>
-                    </div>
+                {/* Logo */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    border: '2px solid transparent',
+                    borderRadius: '4px',
+                    padding: '0.2rem 0.5rem',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.15s',
+                    whiteSpace: 'nowrap',
+                }}
+                     onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
+                     onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
+                >
+                    <span style={{ fontSize: '1.4rem' }}>🐧</span>
+                    <span style={{ color: '#fff', fontSize: '0.7rem', letterSpacing: '1px' }}>
+                        PenguinStore
+                    </span>
+                </div>
 
-                    {/* Search */}
-                    <form onSubmit={handleSearch} className="flex-1 flex ml-4">
-                        <input
-                            type="text"
-                            value={query}
-                            onChange={(e) => {
-                                setQuery(e.target.value);
-                                onSearch?.(e.target.value);
-                            }}
-                            placeholder='Search "rocks" or "vibes"...'
-                            className="flex-1 px-3 py-2 rounded-l-md text-sm text-gray-900 outline-none border-2 border-transparent focus:border-amber-400"
-                        />
-                        <button
-                            type="submit"
-                            style={{ backgroundColor: "#f90" }}
-                            className="px-4 rounded-r-md hover:bg-amber-500 transition-colors flex items-center"
-                        >
-                            <Search size={18} className="text-gray-900" />
-                        </button>
-                    </form>
+                {/* Deliver to */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    border: '2px solid transparent',
+                    borderRadius: '4px',
+                    padding: '0.2rem 0.5rem',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.15s',
+                    whiteSpace: 'nowrap',
+                }}
+                     onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
+                     onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
+                >
+                    <span style={{ color: '#8ab4c8', fontSize: '0.65rem' }}>📍 Deliver to</span>
+                    <span style={{ color: '#fff', fontSize: '0.8rem', fontWeight: 'bold' }}>South Pole</span>
+                </div>
 
-                    {/* Nav items */}
-                    <div className="hidden md:flex items-center gap-4 ml-4 text-white">
-                        <div className="flex flex-col cursor-pointer hover:text-amber-400 transition-colors">
-                            <span className="text-xs text-gray-400">Hello, Customer</span>
-                            <span className="text-sm font-semibold flex items-center gap-0.5">
-                Account <ChevronDown size={12} />
-              </span>
-                        </div>
-                        <div className="flex flex-col cursor-pointer hover:text-amber-400 transition-colors">
-                            <span className="text-xs text-gray-400">Returns</span>
-                            <span className="text-sm font-semibold">& Orders</span>
-                        </div>
-                    </div>
-
-                    {/* Cart */}
-                    <button
-                        onClick={handleCartOpen}
-                        className="relative flex items-end gap-1 ml-2 group cursor-pointer"
+                {/* Search bar */}
+                <div style={{ flex: 1, display: 'flex', position: 'relative' }}>
+                    <select style={{
+                        background: '#d0e8f2',
+                        border: 'none',
+                        borderRadius: '4px 0 0 4px',
+                        padding: '0 0.5rem',
+                        fontSize: '0.75rem',
+                        color: '#1a2e3b',
+                        cursor: 'pointer',
+                        height: '38px',
+                    }}>
+                        <option>All Tasks</option>
+                        <option>Completed</option>
+                        <option>Pending</option>
+                    </select>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={handleSearch}
+                        onBlur={() => setTimeout(() => setShowResults(false), 150)}
+                        onFocus={() => searchQuery && setShowResults(true)}
+                        placeholder="Search tasks..."
+                        style={{
+                            flex: 1,
+                            padding: '0 1rem',
+                            border: 'none',
+                            fontSize: '0.95rem',
+                            color: '#1a2e3b',
+                            outline: 'none',
+                            height: '38px',
+                            background: '#fff',
+                        }}
+                    />
+                    <button style={{
+                        background: '#6a9ab0',
+                        border: 'none',
+                        borderRadius: '0 4px 4px 0',
+                        padding: '0 1rem',
+                        cursor: 'pointer',
+                        height: '38px',
+                        fontSize: '1rem',
+                        transition: 'background 0.15s',
+                    }}
+                            onMouseEnter={e => e.currentTarget.style.background = '#a8dfc0'}
+                            onMouseLeave={e => e.currentTarget.style.background = '#6a9ab0'}
                     >
-                        <div className="relative">
-                            <ShoppingCart
-                                size={32}
-                                className={`text-white group-hover:text-amber-400 transition-colors ${cartBouncing ? "cart-bounce" : ""}`}
-                            />
-                            {count > 0 && (
-                                <span
-                                    style={{ backgroundColor: "#f90" }}
-                                    className="absolute -top-1 -right-1 text-gray-900 text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1"
-                                >
-                  {count}
-                </span>
+                        🔍
+                    </button>
+
+                    {/* Search dropdown results */}
+                    {showResults && (
+                        <div style={{
+                            position: 'absolute',
+                            top: '42px',
+                            left: '0',
+                            right: '0',
+                            background: '#fff',
+                            border: '1px solid #d0e8f2',
+                            borderRadius: '4px',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                            zIndex: 1001,
+                            maxHeight: '200px',
+                            overflowY: 'auto',
+                        }}>
+                            {searchResults.length === 0 ? (
+                                <div style={{ padding: '0.75rem 1rem', color: '#8ab4c8', fontSize: '0.85rem' }}>
+                                    No tasks found
+                                </div>
+                            ) : (
+                                searchResults.map(todo => (
+                                    <div key={todo.id} style={{
+                                        padding: '0.6rem 1rem',
+                                        fontSize: '0.85rem',
+                                        color: '#1a2e3b',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem',
+                                        transition: 'background 0.1s',
+                                    }}
+                                         onMouseEnter={e => e.currentTarget.style.background = '#f0f8ff'}
+                                         onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                                    >
+                                        <span style={{
+                                            width: '8px',
+                                            height: '8px',
+                                            borderRadius: '50%',
+                                            background: todo.completed ? '#a8dfc0' : '#6a9ab0',
+                                            flexShrink: 0,
+                                        }} />
+                                        {todo.task}
+                                        <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: '#8ab4c8' }}>
+                                            {todo.completed ? '✅ Done' : '⏳ Pending'}
+                                        </span>
+                                    </div>
+                                ))
                             )}
                         </div>
-                        <span className="hidden md:block text-white font-semibold text-sm group-hover:text-amber-400 transition-colors mb-0.5">
-              Cart
-            </span>
-                    </button>
+                    )}
                 </div>
 
-                {/* Nav strip */}
-                <div style={{ backgroundColor: "#232f3e" }} className="px-4 py-1.5">
-                    <div className="flex items-center gap-6 max-w-[1400px] mx-auto overflow-x-auto scrollbar-hide">
-                        {["All Departments", "Today's Dumb Deals", "Customer Service", "Registry", "Gift Cards", "Sell"].map((item) => (
-                            <button
-                                key={item}
-                                className="text-white text-sm whitespace-nowrap hover:text-amber-400 transition-colors py-0.5"
-                            >
-                                {item}
-                            </button>
-                        ))}
-                        <span style={{ color: "#f90" }} className="text-sm font-semibold whitespace-nowrap">
-              🔥 Rocks are on sale again
-            </span>
+                {/* Sign in */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    border: '2px solid transparent',
+                    borderRadius: '4px',
+                    padding: '0.2rem 0.5rem',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.15s',
+                    whiteSpace: 'nowrap',
+                }}
+                     onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
+                     onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
+                >
+                    <span style={{ color: '#8ab4c8', fontSize: '0.65rem' }}>Hello, Penguin</span>
+                    <span style={{ color: '#fff', fontSize: '0.8rem', fontWeight: 'bold' }}>Account & Lists ▾</span>
+                </div>
+
+                {/* Orders */}
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    border: '2px solid transparent',
+                    borderRadius: '4px',
+                    padding: '0.2rem 0.5rem',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.15s',
+                    whiteSpace: 'nowrap',
+                }}
+                     onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
+                     onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
+                >
+                    <span style={{ color: '#8ab4c8', fontSize: '0.65rem' }}>Returns</span>
+                    <span style={{ color: '#fff', fontSize: '0.8rem', fontWeight: 'bold' }}>&amp; Orders</span>
+                </div>
+
+                {/* Cart icon */}
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    border: '2px solid transparent',
+                    borderRadius: '4px',
+                    padding: '0.2rem 0.5rem',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.15s',
+                    position: 'relative',
+                }}
+                     onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
+                     onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
+                >
+                    <div style={{ position: 'relative' }}>
+                        <span style={{ fontSize: '1.6rem' }}>🛒</span>
+                        {totalItems > 0 && (
+                            <span style={{
+                                position: 'absolute',
+                                top: '-4px',
+                                right: '-4px',
+                                background: '#a8dfc0',
+                                color: '#1a3a4a',
+                                borderRadius: '50%',
+                                width: '18px',
+                                height: '18px',
+                                fontSize: '0.7rem',
+                                fontWeight: 'bold',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+                                {totalItems}
+                            </span>
+                        )}
                     </div>
+                    <span style={{ color: '#fff', fontSize: '0.8rem', fontWeight: 'bold' }}>Cart</span>
                 </div>
-            </header>
+            </div>
 
-            <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
-        </>
+            {/* Secondary navbar row */}
+            <div style={{
+                background: '#254d63',
+                padding: '0.4rem 1.5rem',
+                display: 'flex',
+                gap: '0.25rem',
+                alignItems: 'center',
+            }}>
+                {['☰ All', '🐟 Fish Market', '❄️ Ice Picks', '🎣 Fishing Gear', '🌊 Ocean Goods', "Today's Deals", 'Customer Service'].map((label) => (
+                    <button key={label} style={{
+                        background: 'transparent',
+                        border: '2px solid transparent',
+                        borderRadius: '4px',
+                        color: '#fff',
+                        padding: '0.25rem 0.6rem',
+                        fontSize: '0.8rem',
+                        cursor: 'pointer',
+                        whiteSpace: 'nowrap',
+                        fontFamily: 'Georgia, serif',
+                        transition: 'border-color 0.15s',
+                    }}
+                            onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
+                            onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
+        </nav>
     );
 }
+
+NavBar.propTypes = {
+    cart: PropTypes.arrayOf(PropTypes.shape({
+        task: PropTypes.string,
+        quantity: PropTypes.number,
+    })),
+    todos: PropTypes.arrayOf(PropTypes.shape({
+        id: PropTypes.number,
+        task: PropTypes.string,
+        completed: PropTypes.bool,
+    })),
+};
+
+export default NavBar;
