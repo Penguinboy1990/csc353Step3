@@ -2,19 +2,20 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-function NavBar({ cart, todos }) {
-    const [searchQuery, setSearchQuery] = useState('');
+const CATEGORIES = ['All', 'Toys', 'Food', 'Clothing', 'Gear', 'Home', 'Art', 'Books'];
+
+function NavBar({ cart, products, activeCategory, onCategoryChange, searchQuery, onSearchChange }) {
     const [searchResults, setSearchResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
 
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // ← add this line
 
     function handleSearch(e) {
         const query = e.target.value;
-        setSearchQuery(query);
+        onSearchChange(query); // ← update parent state
         if (query.trim()) {
-            const results = todos.filter(todo =>
-                todo.task.toLowerCase().includes(query.toLowerCase())
+            const results = products.filter(p =>
+                p.item.toLowerCase().includes(query.toLowerCase())
             );
             setSearchResults(results);
             setShowResults(true);
@@ -24,11 +25,16 @@ function NavBar({ cart, todos }) {
         }
     }
 
+    // Add a clear search function for when a dropdown result is clicked:
+    function selectResult(item) {
+        onSearchChange(item);
+        setShowResults(false);
+    }
+
     return (
         <nav style={{
             width: '100%',
             background: '#1a3a4a',
-            padding: '0',
             fontFamily: 'Georgia, serif',
             boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             position: 'sticky',
@@ -42,7 +48,6 @@ function NavBar({ cart, todos }) {
                 padding: '0.6rem 1.5rem',
                 gap: '1rem',
             }}>
-
                 {/* Logo */}
                 <div style={{
                     display: 'flex',
@@ -52,16 +57,13 @@ function NavBar({ cart, todos }) {
                     borderRadius: '4px',
                     padding: '0.2rem 0.5rem',
                     cursor: 'pointer',
-                    transition: 'border-color 0.15s',
                     whiteSpace: 'nowrap',
                 }}
                      onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
                      onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
                 >
                     <span style={{ fontSize: '1.4rem' }}>🐧</span>
-                    <span style={{ color: '#fff', fontSize: '0.7rem', letterSpacing: '1px' }}>
-                        PenguinStore
-                    </span>
+                    <span style={{ color: '#fff', fontSize: '0.7rem', letterSpacing: '1px' }}>PenguinStore</span>
                 </div>
 
                 {/* Deliver to */}
@@ -72,7 +74,6 @@ function NavBar({ cart, todos }) {
                     borderRadius: '4px',
                     padding: '0.2rem 0.5rem',
                     cursor: 'pointer',
-                    transition: 'border-color 0.15s',
                     whiteSpace: 'nowrap',
                 }}
                      onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
@@ -94,9 +95,9 @@ function NavBar({ cart, todos }) {
                         cursor: 'pointer',
                         height: '38px',
                     }}>
-                        <option>All Tasks</option>
-                        <option>Completed</option>
-                        <option>Pending</option>
+                        {CATEGORIES.map(cat => (
+                            <option key={cat}>{cat}</option>
+                        ))}
                     </select>
                     <input
                         type="text"
@@ -104,7 +105,7 @@ function NavBar({ cart, todos }) {
                         onChange={handleSearch}
                         onBlur={() => setTimeout(() => setShowResults(false), 150)}
                         onFocus={() => searchQuery && setShowResults(true)}
-                        placeholder="Search tasks..."
+                        placeholder="Search products..."
                         style={{
                             flex: 1,
                             padding: '0 1rem',
@@ -116,6 +117,23 @@ function NavBar({ cart, todos }) {
                             background: '#fff',
                         }}
                     />
+                    {/* Clear Search Bar Button */}
+                    {searchQuery && (
+                        <button
+                            onClick={() => { onSearchChange(''); setShowResults(false); }}
+                            style={{
+                                background: '#fff',
+                                border: 'none',
+                                padding: '0 0.5rem',
+                                cursor: 'pointer',
+                                color: '#8ab4c8',
+                                fontSize: '0.9rem',
+                                height: '38px',
+                            }}
+                        >
+                            ✕
+                        </button>
+                    )}
                     <button style={{
                         background: '#6a9ab0',
                         border: 'none',
@@ -124,7 +142,6 @@ function NavBar({ cart, todos }) {
                         cursor: 'pointer',
                         height: '38px',
                         fontSize: '1rem',
-                        transition: 'background 0.15s',
                     }}
                             onMouseEnter={e => e.currentTarget.style.background = '#a8dfc0'}
                             onMouseLeave={e => e.currentTarget.style.background = '#6a9ab0'}
@@ -132,7 +149,7 @@ function NavBar({ cart, todos }) {
                         🔍
                     </button>
 
-                    {/* Search dropdown results */}
+                    {/* Search dropdown */}
                     {showResults && (
                         <div style={{
                             position: 'absolute',
@@ -149,33 +166,35 @@ function NavBar({ cart, todos }) {
                         }}>
                             {searchResults.length === 0 ? (
                                 <div style={{ padding: '0.75rem 1rem', color: '#8ab4c8', fontSize: '0.85rem' }}>
-                                    No tasks found
+                                    No products found
                                 </div>
                             ) : (
-                                searchResults.map(todo => (
-                                    <div key={todo.id} style={{
-                                        padding: '0.6rem 1rem',
-                                        fontSize: '0.85rem',
-                                        color: '#1a2e3b',
-                                        cursor: 'pointer',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '0.5rem',
-                                        transition: 'background 0.1s',
-                                    }}
-                                         onMouseEnter={e => e.currentTarget.style.background = '#f0f8ff'}
-                                         onMouseLeave={e => e.currentTarget.style.background = '#fff'}
+                                searchResults.map(p => (
+                                    <div
+                                        key={p.id}
+                                        onClick={() => selectResult(p.item)}
+                                        style={{
+                                            padding: '0.6rem 1rem',
+                                            fontSize: '0.85rem',
+                                            color: '#1a2e3b',
+                                            cursor: 'pointer',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem',
+                                        }}
+                                        onMouseEnter={e => e.currentTarget.style.background = '#f0f8ff'}
+                                        onMouseLeave={e => e.currentTarget.style.background = '#fff'}
                                     >
                                         <span style={{
                                             width: '8px',
                                             height: '8px',
                                             borderRadius: '50%',
-                                            background: todo.completed ? '#a8dfc0' : '#6a9ab0',
+                                            background: '#6a9ab0',
                                             flexShrink: 0,
                                         }} />
-                                        {todo.task}
+                                        {p.item}
                                         <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: '#8ab4c8' }}>
-                                            {todo.completed ? '✅ Done' : '⏳ Pending'}
+                                            {p.category}
                                         </span>
                                     </div>
                                 ))
@@ -184,7 +203,7 @@ function NavBar({ cart, todos }) {
                     )}
                 </div>
 
-                {/* Sign in */}
+                {/* Account */}
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -192,7 +211,6 @@ function NavBar({ cart, todos }) {
                     borderRadius: '4px',
                     padding: '0.2rem 0.5rem',
                     cursor: 'pointer',
-                    transition: 'border-color 0.15s',
                     whiteSpace: 'nowrap',
                 }}
                      onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
@@ -210,7 +228,6 @@ function NavBar({ cart, todos }) {
                     borderRadius: '4px',
                     padding: '0.2rem 0.5rem',
                     cursor: 'pointer',
-                    transition: 'border-color 0.15s',
                     whiteSpace: 'nowrap',
                 }}
                      onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
@@ -229,7 +246,6 @@ function NavBar({ cart, todos }) {
                     borderRadius: '4px',
                     padding: '0.2rem 0.5rem',
                     cursor: 'pointer',
-                    transition: 'border-color 0.15s',
                     position: 'relative',
                 }}
                      onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
@@ -261,31 +277,40 @@ function NavBar({ cart, todos }) {
                 </div>
             </div>
 
-            {/* Secondary navbar row */}
+            {/* Secondary navbar — category filters */}
             <div style={{
                 background: '#254d63',
                 padding: '0.4rem 1.5rem',
                 display: 'flex',
                 gap: '0.25rem',
                 alignItems: 'center',
+                flexWrap: 'wrap',
             }}>
-                {['☰ All', '🐟 Fish Market', '❄️ Ice Picks', '🎣 Fishing Gear', '🌊 Ocean Goods', "Today's Deals", 'Customer Service'].map((label) => (
-                    <button key={label} style={{
-                        background: 'transparent',
-                        border: '2px solid transparent',
-                        borderRadius: '4px',
-                        color: '#fff',
-                        padding: '0.25rem 0.6rem',
-                        fontSize: '0.8rem',
-                        cursor: 'pointer',
-                        whiteSpace: 'nowrap',
-                        fontFamily: 'Georgia, serif',
-                        transition: 'border-color 0.15s',
-                    }}
-                            onMouseEnter={e => e.currentTarget.style.borderColor = '#fff'}
-                            onMouseLeave={e => e.currentTarget.style.borderColor = 'transparent'}
+                {CATEGORIES.map((cat) => (
+                    <button
+                        key={cat}
+                        onClick={() => onCategoryChange(cat)}
+                        style={{
+                            background: activeCategory === cat ? '#a8dfc0' : 'transparent',
+                            border: `2px solid ${activeCategory === cat ? '#a8dfc0' : 'transparent'}`,
+                            borderRadius: '4px',
+                            color: activeCategory === cat ? '#1a2e3b' : '#fff',
+                            padding: '0.25rem 0.75rem',
+                            fontSize: '0.8rem',
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap',
+                            fontFamily: 'Georgia, serif',
+                            fontWeight: activeCategory === cat ? 'bold' : 'normal',
+                            transition: 'all 0.15s',
+                        }}
+                        onMouseEnter={e => {
+                            if (activeCategory !== cat) e.currentTarget.style.borderColor = '#fff';
+                        }}
+                        onMouseLeave={e => {
+                            if (activeCategory !== cat) e.currentTarget.style.borderColor = 'transparent';
+                        }}
                     >
-                        {label}
+                        {cat}
                     </button>
                 ))}
             </div>
@@ -295,14 +320,18 @@ function NavBar({ cart, todos }) {
 
 NavBar.propTypes = {
     cart: PropTypes.arrayOf(PropTypes.shape({
-        task: PropTypes.string,
+        item: PropTypes.string,
         quantity: PropTypes.number,
     })),
-    todos: PropTypes.arrayOf(PropTypes.shape({
+    products: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number,
-        task: PropTypes.string,
-        completed: PropTypes.bool,
+        item: PropTypes.string,
+        category: PropTypes.string,
     })),
+    activeCategory: PropTypes.string,
+    onCategoryChange: PropTypes.func,
+    searchQuery: PropTypes.string,
+    onSearchChange: PropTypes.func,
 };
 
 export default NavBar;
