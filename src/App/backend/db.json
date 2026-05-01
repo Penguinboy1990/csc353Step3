@@ -1,164 +1,132 @@
 {
-  "todos": [
+  "products": [
     {
       "id": 1,
-      "task": "Penguin Plush Hug Pillow",
-      "description": "Stuffed penguin plush toy, 11 inches tall. For kids. Cute appearance \nFilled with soft and fluffy PP cotton. Special color makes the stuffed penguin plush look more delicate and texture bring this penguin to life.\nBrings comfort and security to young children. It's a good friend for your child, not just a toy.",
+      "item": "Penguin Plush Hug Pillow",
+      "description": "Stuffed penguin plush toy. 11 inches tall. Filled with soft and fluffy PP cotton",
       "image": "https://m.media-amazon.com/images/I/51RZksyfeZS._AC_UL480_FMwebp_QL65_.jpg",
       "price": 24.99,
-      "completed": false
+      "category": "Toys"
     },
     {
       "id": 2,
-      "task": "Antarctic Ice Soy Candle",
-      "description": "Hand-poured soy candle with notes of sea salt, driftwood, and glacial mist. Burns 40hrs.",
-      "image": "https://images.unsplash.com/photo-1603006905003-be475563bc59?w=400&q=80",
-      "price": 14.99,
-      "completed": false
+      "item": "Freeze-Dried Krill",
+      "description": "Freeze dried krill rich in protein, vitamins and minerals. Great support for pets",
+      "image": "https://m.media-amazon.com/images/I/719XjU0W+gL._AC_SL1500_.jpg",
+      "price": 9.99,
+      "category": "Food"
     },
     {
       "id": 3,
-      "task": "Wild-Caught Antarctic Silverfish",
-      "description": "Sustainably sourced Antarctic silverfish, vacuum sealed for freshness. 200g per pack.",
-      "image": "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?w=400&q=80",
-      "price": 9.99,
-      "completed": false
+      "item": "Polar Expedition Jacket",
+      "description": "Insulated polar jacket rated to -40°C, windproof shell, reinforced seams. Unisex sizing",
+      "image": "https://m.media-amazon.com/images/I/71TfpBjaUaL._AC_SY550_.jpg",
+      "price": 44.99,
+      "category": "Clothing"
     },
     {
       "id": 4,
-      "task": "Polar Expedition Jacket",
-      "description": "Insulated polar jacket rated to -40°C, windproof shell, reinforced seams. Unisex sizing.",
-      "image": "https://images.unsplash.com/photo-1544923246-77307dd654cb?w=400&q=80",
-      "price": 89.99,
-      "completed": false
+      "item": "Iceberg Poster",
+      "description": "Poster of an iceberg. 24 inches by 36 inches",
+      "image": "https://m.media-amazon.com/images/I/61BCF9JZrvL._AC_SL1001_.jpg",
+      "price": 2.99,
+      "category": "Art"
     },
     {
       "id": 5,
-      "task": "Antarctic Landscape Print",
-      "description": "Framed 8x10 archival quality photo print of the Ross Ice Shelf at golden hour.",
-      "image": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80",
-      "price": 34.99,
-      "completed": false
+      "item": "Insulated Antarctica Tumbler",
+      "description": "Insulated 20oz tumbler. Double-wall stainless steel. Keeps drinks cold or hot. BPA-free lid",
+      "image": "https://m.media-amazon.com/images/I/61DmbyeJYqL._AC_SL1500_.jpg",
+      "price": 7.99,
+      "category": "Home"
     },
     {
       "id": 6,
-      "task": "Glacier Blue Tumbler",
-      "description": "Double-wall insulated 20oz tumbler. Keeps drinks cold 24hrs, hot 12hrs. BPA-free lid.",
-      "image": "https://images.unsplash.com/photo-1478719059408-592965723cbc?w=400&q=80",
-      "price": 19.99,
-      "completed": false
+      "item": "Penguin Pin Set",
+      "description": "Set of 6 cute enamel pins of penguins",
+      "image": "https://m.media-amazon.com/images/I/81KRzf-CcYL._AC_SY535_.jpg",
+      "price": 4.99,
+      "category": "Toys"
     },
     {
       "id": 7,
-      "task": "Penguin Enamel Pin Set",
-      "description": "Set of 5 enamel pins featuring King, Emperor, Rockhopper, Chinstrap, and Gentoo penguins.",
-      "image": "https://images.unsplash.com/photo-1545671913-b89ac1b4ac10?w=400&q=80",
-      "price": 12.99,
-      "completed": false
+      "item": "Hidden Antarctica: A Photo Journey Through Untouched Beauty",
+      "description": "200 page hardcover book of rarely-visited locations in Antarctica. Stunning Antarctic wildlife photography",
+      "image": "https://m.media-amazon.com/images/I/61oYOgl2PAL._SL1500_.jpg",
+      "price": 19.99,
+      "category": "Books"
     },
     {
       "id": 8,
-      "task": "Life on Ice Coffee Table Book",
-      "description": "256-page hardcover book of stunning Antarctic wildlife photography by award-winning photographers.",
-      "image": "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=400&q=80",
-      "price": 39.99,
-      "completed": false
+      "item": "Snow Sled",
+      "description": "Lightweight aluminium frame sled rated to 300 pounds. 52 inches by 22 inches",
+      "image": "https://m.media-amazon.com/images/I/61fPiOr-3mL._AC_SL1500_.jpg",
+      "price": 59.99,
+      "category": "Gear"
     },
     {
       "id": 9,
-      "task": "Aluminium Snow Sled",
-      "description": "Lightweight aluminium frame sled rated to 120kg. Compact folding design for easy transport.",
-      "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&q=80",
-      "price": 49.99,
-      "completed": false
+      "item": "Snow-themed Soap",
+      "description": "Bath & Body Works Fresh Sparkling Snow Gentle Foaming Hand Soap. 8.75 fluid ounces",
+      "image": "https://m.media-amazon.com/images/I/61hWwE5fNbL._SL1500_.jpg",
+      "price": 7.99,
+      "category": "Home"
     },
     {
       "id": 10,
-      "task": "Antarctic Ocean Soap Bar",
-      "description": "Artisan soap bar infused with kelp extract and sea minerals. Cold-pressed, 120g, vegan.",
-      "image": "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&q=80",
-      "price": 7.99,
-      "completed": false
+      "item": "Penguin Ceramic Mug",
+      "description": "Standard mug with a cartoon Magellan penguin on it. 11 fluid ounces",
+      "image": "https://m.media-amazon.com/images/I/61Io5vTYK+L._AC_SL1500_.jpg",
+      "price": 4.99,
+      "category": "Home"
     },
     {
       "id": 11,
-      "task": "Penguin Ceramic Mug",
-      "description": "400ml penguin-shaped ceramic mug with sculpted handle. Microwave and dishwasher safe.",
-      "image": "https://images.unsplash.com/photo-1598439210625-5067c578f3f6?w=400&q=80",
-      "price": 16.99,
-      "completed": false
+      "item": "Wildlife Binoculars",
+      "description": "Waterproof binoculars. Wide field of view. Ideal for penguin watching",
+      "image": "https://m.media-amazon.com/images/I/71EnkUZ5D-L._AC_SL1500_.jpg",
+      "price": 37.99,
+      "category": "Gear"
     },
     {
       "id": 12,
-      "task": "Merino Wool Mittens",
-      "description": "100% Merino wool mittens with embroidered penguin motif on the cuff. One size fits most.",
-      "image": "https://images.unsplash.com/photo-1510147028711-6f5c56a94c14?w=400&q=80",
-      "price": 29.99,
-      "completed": false
+      "item": "Penguin Scarf",
+      "description": "Knitted scarf with Penguins printed on it. 35 inches by 70 inches",
+      "image": "https://m.media-amazon.com/images/I/816KQtoKs+L._AC_SX466_.jpg",
+      "price": 7.99,
+      "category": "Clothing"
     },
     {
       "id": 13,
-      "task": "Antarctica Wall Map",
-      "description": "Detailed 24x36 inch wall map of Antarctica with geographic labels. Matte laminated finish.",
-      "image": "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=400&q=80",
-      "price": 22.99,
-      "completed": false
+      "item": "Waterproof Expedition Backpack",
+      "description": "Orange waterproof nylon hiking backpack. 10.5 gallons of space. 2 USB ports included",
+      "image": "https://m.media-amazon.com/images/I/71+7IV4hHzL._AC_SL1500_.jpg",
+      "price": 27.99,
+      "category": "Gear"
     },
     {
       "id": 14,
-      "task": "Wildlife Binoculars 10x42",
-      "description": "Compact fog-proof and waterproof binoculars. Wide field of view, ideal for penguin watching.",
-      "image": "https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=400&q=80",
-      "price": 64.99,
-      "completed": false
+      "item": "Penguin Poster",
+      "description": "Poster of adelie penguins diving into water. 24 inches by 36 inches",
+      "image": "https://m.media-amazon.com/images/I/61wJilGlqUL._AC_SL1024_.jpg",
+      "price": 5.99,
+      "category": "Art"
     },
     {
       "id": 15,
-      "task": "Penguin Cookie Cutter Set",
-      "description": "Set of 6 stainless steel penguin cookie cutters in assorted sizes. Dishwasher safe.",
-      "image": "https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=400&q=80",
-      "price": 11.99,
-      "completed": false
+      "item": "Polar 4 Person Tent",
+      "description": "Double-layered expedition tent rated to -30°C. Freestanding design, stakes included.",
+      "image": "https://m.media-amazon.com/images/I/516ltD+QwLS._AC_SL1500_.jpg",
+      "price": 64.99,
+      "category": "Gear"
     },
     {
       "id": 16,
-      "task": "Glacier White Knit Scarf",
-      "description": "Chunky knit scarf in glacier white, 100% Merino wool, 180cm long. Handmade in Iceland.",
-      "image": "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=400&q=80",
-      "price": 27.99,
-      "completed": false
-    },
-    {
-      "id": 17,
-      "task": "Waterproof Expedition Backpack",
-      "description": "40L waterproof backpack with padded straps, chest clip, and exclusive penguin patch.",
-      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80",
-      "price": 74.99,
-      "completed": false
-    },
-    {
-      "id": 18,
-      "task": "Penguin Watercolor Art Print",
-      "description": "Original watercolor illustration of a Gentoo penguin family, signed 11x14 archival print.",
-      "image": "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400&q=80",
-      "price": 49.99,
-      "completed": false
-    },
-    {
-      "id": 19,
-      "task": "Polar 2-Person Tent",
-      "description": "Double-layered expedition tent rated to -30°C. Freestanding design, stakes included. 3.2kg.",
-      "image": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=400&q=80",
-      "price": 199.99,
-      "completed": false
-    },
-    {
-      "id": 20,
-      "task": "Antarctic Krill Omega-3 Supplement",
-      "description": "90-capsule supply of pure Antarctic krill oil. High-potency EPA & DHA, no fishy aftertaste.",
-      "image": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&q=80",
-      "price": 32.99,
-      "completed": false
+      "item": "Red Calamari",
+      "description": "Shredded Dried Red Squid. Seafood Snack. High protein, low fat, naturally flavorful. 4oz",
+      "image": "https://m.media-amazon.com/images/I/51VkgVbi8wL._SL1187_.jpg",
+      "price": 8.99,
+      "category": "Food"
     }
   ]
 }
