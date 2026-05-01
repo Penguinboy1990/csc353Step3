@@ -1,114 +1,118 @@
 "use client";
-{/* This acts like App.jsx */}
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from './components/Card';
 import ShoppingCart from './components/ShoppingCart';
 import NavBar from './components/NavBar';
 
-const apiURL = '/api/todos';
+const apiURL = '/api/products';
 
 export default function Home() {
-    const [todos, setTodos] = useState([]);
+    const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
-    const inputRef = useRef(null);
+    const [activeCategory, setActiveCategory] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
-        fetchTodos();
+        fetchProducts();
     }, []);
 
-    async function fetchTodos() {
+    async function fetchProducts() {
         const response = await fetch(apiURL);
         const data = await response.json();
-        setTodos(data);
+        setProducts(data);
     }
 
-    async function addTodo() {
-        const newTask = inputRef.current.value;
-        if (!newTask.trim()) return;
-
-        const response = await fetch(apiURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ task: newTask, completed: false }),
-        });
-
-        if (response.ok) {
-            const added = await response.json();
-            setTodos(prev => [...prev, added]);
-            inputRef.current.value = '';
-        }
-    }
-
-    function addToCart(task) {
+    function addToCart(item, price) {
         setCart(prev => {
-            const existing = prev.find(item => item.task === task);
+            const existing = prev.find(c => c.item === item);
             if (existing) {
-                return prev.map(item =>
-                    item.task === task
-                        ? { ...item, quantity: item.quantity + 1 }
-                        : item
+                return prev.map(c =>
+                    c.item === item ? { ...c, quantity: c.quantity + 1 } : c
                 );
             }
-            return [...prev, { task, quantity: 1 }];
+            return [...prev, { item, price, quantity: 1 }];
         });
     }
 
-    function removeFromCart(task) {
-        setCart(prev => prev.filter(item => item.task !== task));
+    function incrementCart(item) {
+        setCart(prev => prev.map(c =>
+            c.item === item ? { ...c, quantity: c.quantity + 1 } : c
+        ));
     }
 
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    function decrementCart(item) {
+        setCart(prev => {
+            const existing = prev.find(c => c.item === item);
+            if (existing.quantity === 1) {
+                return prev.filter(c => c.item !== item);
+            }
+            return prev.map(c =>
+                c.item === item ? { ...c, quantity: c.quantity - 1 } : c
+            );
+        });
+    }
+
+    function removeFromCart(item) {
+        setCart(prev => prev.filter(c => c.item !== item));
+    }
+
+    const filteredProducts = products
+        .filter(p => activeCategory === 'All' || p.category === activeCategory)
+        .filter(p => p.item.toLowerCase().includes(searchQuery.toLowerCase()));
 
     return (
         <div style={{
             minHeight: '100vh',
             background: 'linear-gradient(160deg, #e8f4fb, #f5fbff)',
-            padding: '3rem 1.5rem',
             fontFamily: 'Georgia, serif',
-            display: 'flex',
-            gap: '2rem',
-            alignItems: 'flex-start',
         }}>
-            <div style={{ flex: 1 }}>
-                {/* Nav Bar */}
-                <div style={{
-                    minHeight: '100vh',
-                    background: 'linear-gradient(160deg, #e8f4fb, #f5fbff)',
-                    fontFamily: 'Georgia, serif',
-                }}>
-                    <NavBar cart={cart} todos={todos} />
+            <NavBar
+                cart={cart}
+                products={products}
+                activeCategory={activeCategory}
+                onCategoryChange={setActiveCategory}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+            />
 
-                    <div style={{ padding: '3rem 1.5rem', display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-                        {/* rest of the existing content */}
+            <div style={{ padding: '2rem 1.5rem', display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+                <div style={{ flex: 1 }}>
+                    <h2 style={{ color: '#1a3a4a', marginBottom: '1.25rem', fontSize: '1.1rem' }}>
+                        {activeCategory === 'All'
+                            ? `All Products (${filteredProducts.length})`
+                            : `${activeCategory} (${filteredProducts.length})`}
+                    </h2>
+
+                    <div style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+                        gap: '1rem',
+                    }}>
+                        {filteredProducts.map((p) => (
+                            <Card
+                                key={p.id}
+                                id={p.id}
+                                item={p.item}
+                                description={p.description}
+                                image={p.image}
+                                price={p.price}
+                                onAddToCart={(item) => addToCart(item, p.price)}
+                                onIncrement={incrementCart}
+                                onDecrement={decrementCart}
+                                cartQuantity={cart.find(c => c.item === p.item)?.quantity ?? 0}
+                            />
+                        ))}
                     </div>
+
+                    {filteredProducts.length === 0 && (
+                        <p style={{ color: '#8ab4c8', fontStyle: 'italic', marginTop: '2rem', textAlign: 'center' }}>
+                            No products found in this category.
+                        </p>
+                    )}
                 </div>
 
-                {/* Todo list — grid layout for product cards */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-                    gap: '1rem',
-                    maxWidth: '900px',
-                    margin: '0 auto',
-                }}>
-                    {todos.map((item) => (
-                        <Card
-                            key={item.id}
-                            id={item.id}
-                            task={item.task}
-                            description={item.description}
-                            image={item.image}
-                            price={item.price}
-                            isCompleted={item.completed}
-                            onDelete={(id) => setTodos(todos.filter(t => t.id !== id))}
-                            onAddToCart={addToCart}
-                        />
-                    ))}
-                </div>
+                <ShoppingCart cart={cart} onIncrement={incrementCart} onDecrement={decrementCart} />
             </div>
-
-            {/* Shopping cart sidebar */}
-            <ShoppingCart cart={cart} onRemove={removeFromCart} />
         </div>
     );
 }
