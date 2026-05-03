@@ -1,4 +1,8 @@
 Remember to run this to start backend on a different port
 when in the root folder /new/todo-app
 
+Using tailwind and Next.js
+Next.js treats "page.js" as a routable page, but everything else is treated as a component.
+That's why there are so many folders with "page.js" in them
+
 npx json-server@0.17.4 src/app/backend/db.json --port 3001
