@@ -1,19 +1,26 @@
 "use client";
 import React from 'react';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 
 function Card({ id, item, description, image, price, onAddToCart, onIncrement, onDecrement, cartQuantity }) {
 
-    const rating = ((id * 7) % 10) / 2 + 3;
-    const roundedRating = Math.round(rating * 2) / 2;
+    const rating = ((id * 7) % 5) + 2.5; // between 2.5 and 5.0
+    const roundedRating = Math.min(5, Math.round(rating * 2) / 2);
     const reviewCount = ((id * 13) % 900) + 100;
 
     function renderStars(r) {
-        return Array.from({ length: 5 }, (_, i) => {
-            if (i < Math.floor(r)) return '★';
-            if (i < r) return '⯨';
-            return '☆';
-        }).join('');
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            if (r >= i) {
+                stars.push(<span key={i} style={{ color: '#f0a500' }}>★</span>);
+            } else if (r >= i - 0.5) {
+                stars.push(<span key={i} style={{ color: '#f0a500' }}>½</span>);
+            } else {
+                stars.push(<span key={i} style={{ color: '#d0e8f2' }}>★</span>);
+            }
+        }
+        return stars;
     }
 
     const inCart = cartQuantity > 0;
@@ -34,38 +41,43 @@ function Card({ id, item, description, image, price, onAddToCart, onIncrement, o
              onMouseLeave={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.08)'}
         >
             {/* Product image */}
-            <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: '#f0f8ff' }}>
-                <img
-                    src={image}
-                    alt={item}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                    onError={e => { e.target.style.display = 'none'; }}
-                />
-                <span style={{
-                    position: 'absolute',
-                    top: '8px',
-                    left: '8px',
-                    background: 'rgba(26,58,74,0.85)',
-                    color: '#fff',
-                    fontSize: '0.65rem',
-                    fontFamily: 'monospace',
-                    padding: '2px 6px',
-                    borderRadius: '4px',
-                }}>#{id}</span>
-                {inCart && (
+            {/* Product image — wrap in Link */}
+            <Link href={`/product/${id}`}>
+                <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: '#f0f8ff', cursor: 'pointer' }}>
+                    <img
+                        src={image}
+                        alt={item}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.2s' }}
+                        onError={e => { e.target.style.display = 'none'; }}
+                        onMouseEnter={e => e.target.style.transform = 'scale(1.04)'}
+                        onMouseLeave={e => e.target.style.transform = 'scale(1)'}
+                    />
                     <span style={{
                         position: 'absolute',
                         top: '8px',
-                        right: '8px',
-                        background: '#a8dfc0',
-                        color: '#1a3a4a',
-                        fontSize: '0.7rem',
-                        fontWeight: 'bold',
-                        padding: '2px 8px',
+                        left: '8px',
+                        background: 'rgba(26,58,74,0.85)',
+                        color: '#fff',
+                        fontSize: '0.65rem',
+                        fontFamily: 'monospace',
+                        padding: '2px 6px',
                         borderRadius: '4px',
-                    }}>🛒 In Cart: {cartQuantity}</span>
-                )}
-            </div>
+                    }}>#{id}</span>
+                    {inCart && (
+                        <span style={{
+                            position: 'absolute',
+                            top: '8px',
+                            right: '8px',
+                            background: '#a8dfc0',
+                            color: '#1a3a4a',
+                            fontSize: '0.7rem',
+                            fontWeight: 'bold',
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                        }}>🛒 In Cart: {cartQuantity}</span>
+                    )}
+                </div>
+            </Link>
 
             {/* Product info */}
             <div style={{ padding: '0.85rem 1rem', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
