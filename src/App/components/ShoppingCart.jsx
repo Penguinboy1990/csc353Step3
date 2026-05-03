@@ -1,9 +1,11 @@
 "use client";
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/navigation';
 
 function ShoppingCart({ cart, onIncrement, onDecrement }) {
     const totalItems = cart.reduce((sum, c) => sum + c.quantity, 0);
+    const router = useRouter();
 
     return (
         <div style={{
@@ -119,49 +121,52 @@ function ShoppingCart({ cart, onIncrement, onDecrement }) {
                         flexDirection: 'column',
                         gap: '0.5rem',
                     }}>
-                        {/* Item count */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ color: '#5a7a8a', fontSize: '0.85rem' }}>
-            Items ({totalItems}):
-        </span>
-                            <span style={{ color: '#1a2e3b', fontSize: '0.85rem' }}>
-            ${cart.reduce((sum, c) => sum + (c.price * c.quantity), 0).toFixed(2)}
-        </span>
-                        </div>
 
-                        {/* Shipping */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ color: '#5a7a8a', fontSize: '0.85rem' }}>Shipping & handling:</span>
-                            <span style={{ color: '#1a2e3b', fontSize: '0.85rem' }}>$0.00</span>
-                        </div>
+                    {/* Item count */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: '#5a7a8a', fontSize: '0.85rem' }}>
+                            Items ({totalItems}):
+                        </span>
+                        <span style={{ color: '#1a2e3b', fontSize: '0.85rem' }}>
+                            ${cart.reduce((sum, c) => sum + (c.price * c.quantity), 0).toFixed(2)}
+                        </span>
+                    </div>
 
-                        {/* Divider */}
-                        <div style={{ borderTop: '1px solid #d0e8f2', paddingTop: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <span style={{ color: '#1a3a4a', fontWeight: 'bold', fontSize: '1rem' }}>
-            Order total:
-        </span>
-                            <span style={{ color: '#1a3a4a', fontWeight: 'bold', fontSize: '1rem' }}>
-            ${cart.reduce((sum, c) => sum + (c.price * c.quantity), 0).toFixed(2)}
-        </span>
-                        </div>
+                    {/* Shipping */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: '#5a7a8a', fontSize: '0.85rem' }}>Shipping & handling:</span>
+                        <span style={{ color: '#1a2e3b', fontSize: '0.85rem' }}>$0.00</span>
+                    </div>
 
-                        {/* Checkout button */}
-                        <button style={{
-                            marginTop: '0.25rem',
-                            background: '#a8dfc0',
-                            color: '#1a2e3b',
-                            border: 'none',
-                            borderRadius: '20px',
-                            padding: '0.6rem',
-                            fontSize: '0.9rem',
-                            fontWeight: 'bold',
-                            cursor: 'pointer',
-                            fontFamily: 'Georgia, serif',
-                            transition: 'background 0.15s',
+                    {/* Divider */}
+                    <div style={{ borderTop: '1px solid #d0e8f2', paddingTop: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ color: '#1a3a4a', fontWeight: 'bold', fontSize: '1rem' }}>
+                            Order total:
+                        </span>
+                        <span style={{ color: '#1a3a4a', fontWeight: 'bold', fontSize: '1rem' }}>
+                            ${cart.reduce((sum, c) => sum + (c.price * c.quantity), 0).toFixed(2)}
+                        </span>
+                    </div>
+
+                    {/* Checkout button */}
+                    <button
+                        onClick={() => router.push('/checkout')}
+                        style={{
+                        marginTop: '0.25rem',
+                        background: '#a8dfc0',
+                        color: '#1a2e3b',
+                        border: 'none',
+                        borderRadius: '20px',
+                        padding: '0.6rem',
+                        fontSize: '0.9rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        fontFamily: 'Georgia, serif',
+                        transition: 'background 0.15s',
                         }}
-                                onMouseEnter={e => e.currentTarget.style.background = '#6a9ab0'}
-                                onMouseLeave={e => e.currentTarget.style.background = '#a8dfc0'}
-                        >
+                        onMouseEnter={e => e.currentTarget.style.background = '#6a9ab0'}
+                        onMouseLeave={e => e.currentTarget.style.background = '#a8dfc0'}
+                    >
                             Proceed to Checkout 🐧
                         </button>
                     </div>
