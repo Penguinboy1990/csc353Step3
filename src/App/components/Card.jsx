@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 
-function Card({ id, item, description, image, price, onAddToCart, onIncrement, onDecrement, cartQuantity }) {
+function Card({ id, item, description, image, price, onAddToCart }) {
 
     const rating = ((id * 7) % 5) + 2.5; // between 2.5 and 5.0
     const roundedRating = Math.min(5, Math.round(rating * 2) / 2);
@@ -23,8 +23,6 @@ function Card({ id, item, description, image, price, onAddToCart, onIncrement, o
         return stars;
     }
 
-    const inCart = cartQuantity > 0;
-
     return (
         <div style={{
             background: '#fff',
@@ -40,7 +38,6 @@ function Card({ id, item, description, image, price, onAddToCart, onIncrement, o
              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.13)'}
              onMouseLeave={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.08)'}
         >
-            {/* Product image */}
             {/* Product image — wrap in Link */}
             <Link href={`/product/${id}`}>
                 <div style={{ position: 'relative', height: '180px', overflow: 'hidden', background: '#f0f8ff', cursor: 'pointer' }}>
@@ -63,19 +60,6 @@ function Card({ id, item, description, image, price, onAddToCart, onIncrement, o
                         padding: '2px 6px',
                         borderRadius: '4px',
                     }}>#{id}</span>
-                    {inCart && (
-                        <span style={{
-                            position: 'absolute',
-                            top: '8px',
-                            right: '8px',
-                            background: '#a8dfc0',
-                            color: '#1a3a4a',
-                            fontSize: '0.7rem',
-                            fontWeight: 'bold',
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                        }}>🛒 In Cart: {cartQuantity}</span>
-                    )}
                 </div>
             </Link>
 
@@ -121,88 +105,27 @@ function Card({ id, item, description, image, price, onAddToCart, onIncrement, o
                     <span style={{ fontSize: '0.72rem', color: '#5a7a8a' }}>FREE delivery tomorrow</span>
                 </div>
 
-                {/* Add to Cart OR +/- controls */}
-                {!inCart ? (
-                    <button
-                        onClick={() => onAddToCart(item)}
-                        style={{
-                            marginTop: '0.5rem',
-                            background: '#a8dfc0',
-                            color: '#1a2e3b',
-                            border: 'none',
-                            borderRadius: '20px',
-                            padding: '0.5rem',
-                            fontSize: '0.85rem',
-                            fontWeight: 'bold',
-                            cursor: 'pointer',
-                            fontFamily: 'Georgia, serif',
-                            transition: 'background 0.15s',
-                        }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#6a9ab0'}
-                        onMouseLeave={e => e.currentTarget.style.background = '#a8dfc0'}
-                    >
-                        🛒 Add to Cart
-                    </button>
-                ) : (
-                    <div style={{
+                {/* Add to Cart button */}
+                <button
+                    onClick={() => onAddToCart(item)}
+                    style={{
                         marginTop: '0.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.75rem',
-                        background: '#f0f8ff',
+                        background: '#a8dfc0',
+                        color: '#1a2e3b',
+                        border: 'none',
                         borderRadius: '20px',
-                        padding: '0.4rem 0.75rem',
-                        border: '1.5px solid #d0e8f2',
-                    }}>
-                        <button
-                            onClick={() => onDecrement(item)}
-                            title={cartQuantity === 1 ? 'Remove from cart' : 'Decrease quantity'}
-                            style={{
-                                background: cartQuantity === 1 ? '#e07a7a' : '#d0e8f2',
-                                color: cartQuantity === 1 ? '#fff' : '#1a3a4a',
-                                border: 'none',
-                                borderRadius: '6px',
-                                width: '28px',
-                                height: '28px',
-                                cursor: 'pointer',
-                                fontSize: cartQuantity === 1 ? '0.85rem' : '1.1rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'background 0.15s',
-                            }}
-                        >
-                            {cartQuantity === 1 ? '🗑️' : '−'}
-                        </button>
-
-                        <span style={{ fontWeight: 'bold', color: '#1a3a4a', fontSize: '0.95rem', minWidth: '20px', textAlign: 'center' }}>
-                            {cartQuantity}
-                        </span>
-
-                        <button
-                            onClick={() => onIncrement(item)}
-                            style={{
-                                background: '#d0e8f2',
-                                color: '#1a3a4a',
-                                border: 'none',
-                                borderRadius: '6px',
-                                width: '28px',
-                                height: '28px',
-                                cursor: 'pointer',
-                                fontSize: '1.1rem',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'background 0.15s',
-                            }}
-                            onMouseEnter={e => e.currentTarget.style.background = '#a8dfc0'}
-                            onMouseLeave={e => e.currentTarget.style.background = '#d0e8f2'}
-                        >
-                            +
-                        </button>
-                    </div>
-                )}
+                        padding: '0.5rem',
+                        fontSize: '0.85rem',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        fontFamily: 'Georgia, serif',
+                        transition: 'background 0.15s',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#6a9ab0'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#a8dfc0'}
+                >
+                    🛒 Add to Cart
+                </button>
             </div>
         </div>
     );
@@ -214,10 +137,7 @@ Card.propTypes = {
     description: PropTypes.string,
     image: PropTypes.string,
     price: PropTypes.number,
-    onAddToCart: PropTypes.func,
-    onIncrement: PropTypes.func,
-    onDecrement: PropTypes.func,
-    cartQuantity: PropTypes.number,
+    onAddToCart: PropTypes.func
 };
 
 export default Card;
