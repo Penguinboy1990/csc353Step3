@@ -5,17 +5,18 @@ import PropTypes from 'prop-types';
 const CATEGORIES = ['All', 'Toys', 'Food', 'Clothing', 'Gear', 'Home', 'Art', 'Books'];
 
 function NavBar({ cart, products, activeCategory, onCategoryChange, searchQuery, onSearchChange }) {
+    const [inputValue, setInputValue] = useState(searchQuery);
     const [searchResults, setSearchResults] = useState([]);
     const [showResults, setShowResults] = useState(false);
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0); // ← add this line
-
-    function handleSearch(e) {
-        const query = e.target.value;
-        onSearchChange(query); // ← update parent state
-        if (query.trim()) {
+    function handleInputChange(e) {
+        const value = e.target.value;
+        setInputValue(value);
+        // Update dropdown suggestions as you type
+        if (value.trim()) {
             const results = products.filter(p =>
-                p.item.toLowerCase().includes(query.toLowerCase())
+                p.item.toLowerCase().includes(value.toLowerCase())
             );
             setSearchResults(results);
             setShowResults(true);
@@ -25,9 +26,27 @@ function NavBar({ cart, products, activeCategory, onCategoryChange, searchQuery,
         }
     }
 
-    // Add a clear search function for when a dropdown result is clicked:
+    function commitSearch(value) {
+        onSearchChange(value);
+        setShowResults(false);
+    }
+
+    function handleKeyDown(e) {
+        if (e.key === 'Enter') commitSearch(inputValue);
+    }
+
+    function handleSearchButton() {
+        commitSearch(inputValue);
+    }
+
     function selectResult(item) {
-        onSearchChange(item);
+        setInputValue(item);
+        commitSearch(item);
+    }
+
+    function handleClear() {
+        setInputValue('');
+        onSearchChange('');
         setShowResults(false);
     }
 
@@ -101,10 +120,11 @@ function NavBar({ cart, products, activeCategory, onCategoryChange, searchQuery,
                     </select>
                     <input
                         type="text"
-                        value={searchQuery}
-                        onChange={handleSearch}
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onKeyDown={handleKeyDown}
                         onBlur={() => setTimeout(() => setShowResults(false), 150)}
-                        onFocus={() => searchQuery && setShowResults(true)}
+                        onFocus={() => inputValue && setShowResults(true)}
                         placeholder="Search products..."
                         style={{
                             flex: 1,
@@ -117,10 +137,11 @@ function NavBar({ cart, products, activeCategory, onCategoryChange, searchQuery,
                             background: '#fff',
                         }}
                     />
+
                     {/* Clear Search Bar Button */}
-                    {searchQuery && (
+                    {inputValue && (
                         <button
-                            onClick={() => { onSearchChange(''); setShowResults(false); }}
+                            onClick={handleClear}
                             style={{
                                 background: '#fff',
                                 border: 'none',
@@ -134,17 +155,22 @@ function NavBar({ cart, products, activeCategory, onCategoryChange, searchQuery,
                             ✕
                         </button>
                     )}
-                    <button style={{
-                        background: '#6a9ab0',
-                        border: 'none',
-                        borderRadius: '0 4px 4px 0',
-                        padding: '0 1rem',
-                        cursor: 'pointer',
-                        height: '38px',
-                        fontSize: '1rem',
-                    }}
-                            onMouseEnter={e => e.currentTarget.style.background = '#a8dfc0'}
-                            onMouseLeave={e => e.currentTarget.style.background = '#6a9ab0'}
+
+                    {/* Search Button */}
+                    <button
+                        onClick={handleSearchButton}
+                        style={{
+                            background: '#6a9ab0',
+                            border: 'none',
+                            borderRadius: '0 4px 4px 0',
+                            padding: '0 1rem',
+                            cursor: 'pointer',
+                            height: '38px',
+                            fontSize: '1rem',
+                            transition: 'background 0.15s',
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = '#a8dfc0'}
+                        onMouseLeave={e => e.currentTarget.style.background = '#6a9ab0'}
                     >
                         🔍
                     </button>
