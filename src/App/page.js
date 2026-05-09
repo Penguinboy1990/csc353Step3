@@ -64,9 +64,6 @@ export default function Home() {
                                 image={p.image}
                                 price={p.price}
                                 onAddToCart={(item) => addToCart(item, p.price)}
-                                onIncrement={incrementCart}
-                                onDecrement={decrementCart}
-                                cartQuantity={getQuantity(p.item)}
                             />
                         ))}
                     </div>
@@ -78,11 +75,13 @@ export default function Home() {
                     )}
                 </div>
 
-                <ShoppingCart
-                    cart={cart}
-                    onIncrement={incrementCart}
-                    onDecrement={decrementCart}
-                />
+                {cart.length > 0 && (
+                    <ShoppingCart
+                        cart={cart}
+                        onIncrement={incrementCart}
+                        onDecrement={decrementCart}
+                    />
+                )}
             </div>
         </div>
     );
